@@ -1,0 +1,92 @@
+ spring -> 
+ 
+ 	STS -> 
+ 			file -> new -> spring starter project -> 
+ 			
+ 					maven -> dev tools {hot reload live reload} , spring web
+ 					
+ 					
+ 	folder -> com -> controller 
+ 			  src-main->webapp/WEB-INF/views
+ 			  
+ 	   
+ 	application.properties ->
+ 				spring.mvc.views.prefix 
+ 							    .suffix 
+ 							    
+ 				server.port=9999
+ 				
+ -------------------------------------------------------------------------------------------
+ 
+ 
+ controller ->  .java / class 
+ 
+ 					new class ->  
+ 								@Controller 
+ 								SessionController  { spring bean } 
+ 								
+ 								
+ we can not open jsp directly -> 
+ 		how to open ? 
+ 				we have to create controller 
+ 				inside controller we have to create a method 
+ 				that returns jsp name 
+ 				and we have to map that method with url 
+ 				
+ 				
+ 				
+ 				
+how to run spring boot app ? 
+how to run our project? 
+	do right click on project -> 
+					select run as spring boot app 
+					
+	once server started it will not open any browser -> 
+	
+	open the browser -> type 
+			http://localhost:9999/newproduct 
+					
+
+----------------------------------------------------------------------------
+
+@Getmapping -> url -> jsp 			-> input -> submit -> server -> 
+
+@Postmapping -> url -> request -> accept -> process -> respone 
+
+
+Spring ->controller -> 
+						public 
+						String 
+							
+ 				
+------------------------------------------------------------------------------
+
+hibernate-validator.jar 
+
+
+-------------------------------------------------------
+
+create database in mysql
+create table in database:mysql 
+
+add mysql-connector -> pom.xml 
+spring-jdbc { JdbcTemplate } 
+ 
+
+db configuration -> db info -> application.proerties 
+
+JdbcTemplate 
+
+
+
+class Person -> spring.xml -> <bean> 
+context.getBean() 
+
+annotation -> spring.xml 
+@Autowired 
+
+
+
+
+
+
