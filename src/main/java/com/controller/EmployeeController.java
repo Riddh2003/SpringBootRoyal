@@ -12,10 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import java.util.*;
 import com.Bean.EmployeeBean;
 
- 
 @Controller
 public class EmployeeController {
-	
+
 	@Autowired
 	JdbcTemplate stmt;
 
@@ -24,42 +23,87 @@ public class EmployeeController {
 		return "EmployeeForm";
 	}
 
+	
+	//save into database 
 	@PostMapping("/saveEmployee")
-	public String viewEmployee(@Validated EmployeeBean employee,BindingResult result,Model model) {
-		model.addAttribute("employee",employee);
+	public String viewEmployee(@Validated EmployeeBean employee, BindingResult result, Model model) {
+		model.addAttribute("employee", employee);
 		if (result.hasErrors()) {
 			model.addAttribute("error", "Please, Enter the Value.");
 			return "EmployeeForm";
-		} 
-		else {
+		} else {
 			// db insert -> db : table : spring -> ready s
 			// mysql connecter jar
 			// dbconnection ->open -> preapardstatement
-			stmt.update("insert into emptable(firstName,lastName,email,password) values(?,?,?,?)",employee.getFirstName(), employee.getLastName(), employee.getEmail(), employee.getPassword());
+			stmt.update("insert into emptable(firstName,lastName,email,password) values(?,?,?,?)",
+					employee.getFirstName(), employee.getLastName(), employee.getEmail(), employee.getPassword());
 			return "ViewEmployee";
 		}
 	}
 
+	
+	//For show all the Employees details in table from
 	@GetMapping("/listEmp")
 	public String listEmployee(Model model) {
 		List<EmployeeBean> employee = stmt.query("select * from emptable",new BeanPropertyRowMapper<EmployeeBean>(EmployeeBean.class));
-		model.addAttribute("employee",employee);
+		model.addAttribute("employee", employee);
 		return "ListEmployee";
 	}
+
 	
+	//For search the Employees
 	@GetMapping("/searchEmp")
 	public String searchEmployee() {
 		return "SearchEmployee";
 	}
-	
+	 
 	@PostMapping("/searchEmp")
-	public String searchEmployeeDb(EmployeeBean employeeBean,Model model){
-		
-		//sql Query
+	public String searchEmployeeDb(EmployeeBean employeeBean, Model model) {
+
+		// sql Query
 		// select * from employee where like '%c%';
-		List<EmployeeBean> employee = stmt.query("select * from emptable where firstName like ?",new BeanPropertyRowMapper<EmployeeBean>(EmployeeBean.class),new Object[] {employeeBean.getFirstName()+"%"});
+		List<EmployeeBean> employee = stmt.query("select * from emptable where firstName like ?",
+				new BeanPropertyRowMapper<EmployeeBean>(EmployeeBean.class),
+				new Object[] { employeeBean.getFirstName() + "%" });
 		model.addAttribute("employee", employee);
 		return "ListEmployee";
+	}
+
+	//For delete the Employees details 
+	@GetMapping("/deleteEmp")
+	public String deleteEmployee(EmployeeBean employeeBean) {
+		// delete from emptable where EID = ?
+		stmt.update("delete from emptable where id = ?", employeeBean.getId());
+		return "redirect:/listEmp";// redirect url not jsp this time
+	}
+
+	
+	//For view the Employees details 
+	@GetMapping("/viewEmp")
+	public String viewAllEmployee(EmployeeBean employeeBean, Model model) {
+		// select * from emptable where id = ?
+		EmployeeBean employee = stmt.queryForObject("select * from emptable where id = ?",
+				new BeanPropertyRowMapper<EmployeeBean>(EmployeeBean.class), new Object[] {employeeBean.getId()});
+		model.addAttribute("emp",employee);
+		return "ViewEmpInfo";
+	}
+	
+	
+	//For edit the Employees details 
+	@GetMapping("/editEmp")
+	public String editEmployee(EmployeeBean employeeBean,Model model) {
+		EmployeeBean employee = stmt.queryForObject("select * from emptable where id = ?",
+				new BeanPropertyRowMapper<EmployeeBean>(EmployeeBean.class), new Object[] {employeeBean.getId()});
+		model.addAttribute("emp",employee);
+		return "EditEmployee";
+	}
+	
+	@PostMapping("/updateEmp")
+	public String updateEmployee(EmployeeBean employeeBean) {
+		
+		stmt.update("update emptable set firstName = ?, lastName = ?, email = ?, password = ? where id = ?",
+				employeeBean.getFirstName(),employeeBean.getLastName(),employeeBean.getEmail(),employeeBean.getPassword(),employeeBean.getId());
+		return "redirect:/listEmp";//redirect to listemp url 
 	}
 //	@PostMapping("/saveEmployee")
 //	public String viewEmployee(EmployeeBean employee, Model model) {
